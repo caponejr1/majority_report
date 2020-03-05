@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.pythonPath": "rpenv\\Scripts\\python.exe",
+		"git.ignoreLimitWarning": true
+	}
+}

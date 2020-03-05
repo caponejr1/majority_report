@@ -1,0 +1,24 @@
+{% extends 'majority_report_app/base.html' %}
+
+{% block content %}
+
+<p>Distance: {{var.distance}}m</p>
+<p>Vehicle 1 Speed: {{var.car1_spd}} MPH</p>
+<p>Vehicle 2 Speed: {{var.car2_spd}} MPH</p>
+<p>Road Width: {{var.road_width}}</p>
+<p>Weather: {{var.weather}}</p>
+<p>Time: {{var.time}}</p>
+<p>Road Type: {{var.road_type}}</p>
+<p>Driver 1 Experience: {{var.driver_exp1}}</p>
+<p>Driver 2 Experience: {{var.driver_exp2}}</p>
+<p>Driver 1 Chemical Influence: {{var.driver_dui1}}</p>
+<p>Driver 2 Chemical Influence: {{var.driver_dui2}}</p>
+<p>Driver 1 Vision: {{var.driver_vision1}}</p>
+<p>Driver 2 Vision: {{var.driver_vision2}}</p>
+<p>Driver 1 Age: {{var.driver_age1}}</p>
+<p>Driver 2 Age: {{var.driver_age2}}</p>
+<p>Vehicle 1 Type: {{var.vehicle1}}</p>
+<p>Vehicle 2 Type: {{var.vehicle2}}</p>
+<p>AI Computer: {{var.computer}}</p>
+
+{% endblock content%}

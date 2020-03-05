@@ -1,0 +1,12 @@
+{% extends "majority_report_app/base.html" %}
+
+{% block content %}
+
+    <p>Select Simulation Conditions:</p>
+    <form action="{% url 'majority_report_app:variables' %}" method='post'>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button name = "submit">Run Simulation</button>
+    </form>
+
+{% endblock content %}
