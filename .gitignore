@@ -1,1 +1,6 @@
-__pycache__
+ps_env/
+__pycache__/
+.vscode
+*.code-workspace
+*.sqllite3
+.env
