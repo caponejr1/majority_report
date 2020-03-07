@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='drive',
             name='env',
-            field=models.ForeignKey(on_delete='CASCADE', to='majority_report_app.Enviornment'),
+            field=models.ForeignKey(on_delete=models.CASCADE, to='majority_report_app.Enviornment'),
         ),
         migrations.AlterField(
             model_name='enviornment',

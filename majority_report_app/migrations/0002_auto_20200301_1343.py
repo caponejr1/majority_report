@@ -53,6 +53,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='drive',
             name='env',
-            field=models.ForeignKey(on_delete='cascade', to='majority_report_app.Enviornment'),
+            field=models.ForeignKey(on_delete=models.CASCADE, to='majority_report_app.Enviornment'),
         ),
     ]

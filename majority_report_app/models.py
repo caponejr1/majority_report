@@ -27,7 +27,7 @@ class Enviornment(models.Model):
     
 class Drive(models.Model):
     #Repeating Variables
-    env = models.ForeignKey(Enviornment,on_delete=models.CASCADE)
+    env = models.ForeignKey(Enviornment, on_delete=models.CASCADE)
     car1_prog = models.DecimalField("Vehicle 1 Progress:", max_digits=999, decimal_places=2, default = 0)
     ghost_prog = models.DecimalField("AI Ghost Progress:", max_digits=999, decimal_places=2, default = 0)
     car2_prog = models.DecimalField("Vehicle 2 Progress:", max_digits=999, decimal_places=2, default = 0)
