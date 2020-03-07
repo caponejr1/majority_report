@@ -1,53 +1,40 @@
 
 # Create your views here.
 import random, car_variables.views, majority_report_app.models
-
+from majority_report_app.views import Drive
 
 #Define program-wide variables here.
 end_dist = 10
 speed_1 = 10
 speed_2 = 10
 road_width = 1
-mods = car_variables.views.Mods()
 
-#Collects data from the simulation
-# class Table:
-#     def __init__(self,name):
-#         self.name = name
-#         self.data = {
-            
-#         }
-#         self.iteration = 0
-#     #Update table with iteration data (One car)
-#     def update(self,car):
-#         self.data["iteration" + str(self.iteration)] = {}
-#         self.data["iteration" + str(self.iteration)][car.get_name() + "_prog"] = str(car.current_dist)
-#         self.data["iteration" + str(self.iteration)][car.get_name() + "_turndist"] = str(car.turn_dist)
-#         self.iteration = self.iteration + 1
-#     #Update table with iteration data (Two cars)
-#     def update_v2(self,car,car2):
-#         #Update table with data from Car 1
-#         self.data["iteration" + str(self.iteration)] = {}
-#         self.data["iteration" + str(self.iteration)][car.get_name() + "_prog"] = str(car.current_dist)
-#         self.data["iteration" + str(self.iteration)][car.get_name() + "_turndist"] = str(car.turn_dist)
-#         #Update table with data from Car 2
-#         self.data["iteration" + str(self.iteration)][car2.get_name() + "_prog"] = str(car2.current_dist)
-#         self.data["iteration" + str(self.iteration)][car2.get_name() + "_turndist"] = str(car2.turn_dist)
-#         self.iteration = self.iteration + 1
-#     #Return car's turn distance for any given iteration
-#     def get_turndist(self,car,iteration):
-#         return int(self.data["iteration" + str(iteration)][car.get_name() + "_turndist"])
+#Updates drive_data
+def update_data(Car1,Car2,AI,outcome):
+    data = {}
+    data["car1_prog"] = Car1.current_dist
+    data["ghost_prog"] = car_ghost.current_dist
+    data["car2_prog"] = Car2.current_dist
+    data["car1_turndist"] = Car1.turn_dist
+    data["ghost_turndist"] = car_ghost.turn_dist
+    data["car2_turndist"] = Car2.turn_dist
+    data["accuracy"] = AI.acc_per
+    data["outcome"] = outcome
+    
+    return data
+    
+    
     
 #Prints an intro to the program and collects independent variables.
-def maj_intro(Car1,Car2):
+def maj_intro(Car1,Car2,variables):
     global end_dist
     global speed_1
     global speed_2
     global road_width
-    end_dist = 1000
-    speed_1 = 70
-    speed_2 = 70
-    road_width = 3
+    end_dist = variables.distance
+    speed_1 = variables.car1_spd
+    speed_2 = variables.car2_spd
+    road_width = variables.road_width
     #Collects simulation distance
     # sim_table.data["distance"] = end_dist
     #Collects vehicle speed
@@ -56,7 +43,6 @@ def maj_intro(Car1,Car2):
     #Collects road width
     # sim_table.data["road_width"] = road_width
     #Initializes Variables
-    car_variables.views.modifiers_intro(majority_report_app.models.Enviornment)
         
     
     #Define Cars Here
@@ -150,6 +136,9 @@ class Car:
         if road_width == 1:
             self.rc = 0
             self.lc = 0
+#DEFINES CAR_GHOST
+car_ghost = Car("Ghost",0)
+
 #Applies modifiers from car_sim_variables
 def apply_mods(Car,Carnum,mods):
     #Weather
@@ -220,9 +209,7 @@ def apply_mods(Car,Carnum,mods):
             self.print_turndist()
             if abs(self.turn_dist) >= road_width:
                 accident = True
-                Car1_table.update(car1)
                 break
-            Car1_table.update(car1)
             self.evaluate_sit()
             self.progress(self.speed)
             
@@ -237,6 +224,7 @@ class AI(Car):
         self.rc = 10
         self.lc = 10
         self.accuracy = 0
+        self.acc_per = 0
     #Variable defs
     def set_name(self,name):
         self.name = name
@@ -251,10 +239,11 @@ class AI(Car):
         
     #Utility Functions
     #AI Updates Accuracy value
-    def check_accuracy(self,car):
+    def check_accuracy(self,car,iteration):
         if car_ghost.turn_dist == car.turn_dist:
             self.accuracy = self.accuracy + 1
-    #AI creates a "Ghost" of target car that it can use in the predicition
+        self.acc_per = int((self.accuracy/iteration)*100)
+    #AI creates a "Ghost" of target car that it can use in the prediction
     def install(self,car):
         car_ghost.set_current_dist(car.start_dist)
         car_ghost.set_turn_dist(0)
@@ -280,7 +269,7 @@ def redo(Car1,Car2,AI):
         car_ghost.set_turn_dist(car_ghost.last_turn_dist)
         AI.comp_power = AI.comp_power - 1
         if AI.comp_power > 0:
-            safety_check(Car1,Car2,Skynet)
+            safety_check(Car1,Car2,AI)
         if AI.comp_power > 0:
             AI.predict(Car1)
         car_ghost.direction_choose()
@@ -323,19 +312,21 @@ def safety_check(Car1,Car2,AI):
         car_ghost.lc = 100
         AI.comp_power = AI.comp_power - 2
 #Moves two vehicles at the same time, driving towards each other. One car has the AI built in.
-def sim_collision(Car1,Car2,AI):
+def sim_collision(Car1,Car2,AI,Mods,env):
+    data_save = []
+    outcome = "Incomplete"
     accident_1 = False
     accident_2 = False
     iteration = 0
-    apply_mods(Car1,1,mods)
-    apply_mods(Car2,2,mods)
+    apply_mods(Car1,1,Mods)
+    apply_mods(Car2,2,Mods)
     AI.install(Car1)
     while (Car1.current_dist <= Car1.end_dist) and (Car2.current_dist >= 0):
         if accident_1 == False:
             if AI.comp_power > 0:
-                safety_check(Car1,Car2,Skynet)
+                safety_check(Car1,Car2,AI)
             if Car1.current_dist > Car1.start_dist and Car1.speed > 0:
-                apply_mods(Car1,1)
+                apply_mods(Car1,1,Mods)
                 Car1.direction_choose()
             if AI.comp_power > 0:
                 AI.predict(Car1)
@@ -343,13 +334,14 @@ def sim_collision(Car1,Car2,AI):
                 car_ghost.direction_choose()
             if AI.comp_power > 0:
                 redo(Car1,Car2,AI)
-            AI.check_accuracy(Car1)
+            if car_ghost.current_dist > car_ghost.start_dist:
+                AI.check_accuracy(Car1,iteration)
         if abs(Car1.turn_dist) >= road_width:
             accident_1 = True
             break
         if accident_2 == False:
             if Car1.current_dist > Car1.start_dist:
-                apply_mods(Car2,2)
+                apply_mods(Car2,2,Mods)
                 Car2.direction_choose()
         if abs(Car2.turn_dist) >= road_width:
             accident_2 = True
@@ -362,9 +354,6 @@ def sim_collision(Car1,Car2,AI):
             accident_1 = True
             accident_2 = True
             break
-        Car1_table.update(Car1)
-        Car2_table.update(Car2)
-        AI_table.update(car_ghost)
         car_ghost.evaluate_sit()
         Car1.progress(Car1.speed)
         Car2.progress(Car2.speed)
@@ -372,18 +361,28 @@ def sim_collision(Car1,Car2,AI):
         Car1.evaluate_sit()
         Car2.evaluate_sit()
         iteration = iteration + 1
-    Car1_table.update(Car1)
-    Car2_table.update(Car2)
-    AI_table.update(car_ghost)
-    sim_table.data["accuracy"] = str(int((AI.accuracy/iteration)*100)) + "%"
-    if accident_1 == False and accident_2 == False:
-        sim_table.data["outcome"] = "success"
+        data = update_data(Car1,Car2,AI,outcome)
+        data_save.append(data)
+    if accident_1 == True:
+        outcome = "Failure"
     else:
-        sim_table.data["outcome"] = "failure"
-    print(Car1_table.data)
-    print("\n")
-    print(Car2_table.data)
-    print("\n")
-    print(AI_table.data)
-    print("\n")
-    print(sim_table.data)
+        outcome = "Success"
+        
+    data = update_data(Car1,Car2,AI,outcome)
+    data_save.append(data)
+    
+    objs = [
+        Drive(
+            env = env,
+            car1_prog = item["car1_prog"],
+            ghost_prog = item["ghost_prog"],
+            car2_prog = item["car2_prog"],
+            car1_turndist = item["car1_turndist"],
+            ghost_turndist = item["ghost_turndist"],
+            car2_turndist = item["car2_turndist"],
+            accuracy = item["accuracy"],
+            outcome = item["outcome"],
+            )
+        for item in data_save
+        ]
+    full_data = Drive.objects.bulk_create(objs)

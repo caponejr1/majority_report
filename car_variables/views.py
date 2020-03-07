@@ -1,6 +1,7 @@
 
 import car_variables.choices as cv
 
+
 class Mods:
     
     def __init__(self):
@@ -207,57 +208,58 @@ def modifiers_intro(variables):
     #WEATHER
     for num, name in cv.WEATHER_CHOICES:
         if num == variables.weather:
-            mods.modify_choices["weather"] = name
+            mods.modify_choices["weather"] = name.lower()
     #TIME
     for num, name in cv.TIME_CHOICES:
         if num == variables.time:
-            mods.modify_choices["time"] = name
+            mods.modify_choices["time"] = name.lower()
     #ROAD CONDITION
     for num, name in cv.ROAD_CHOICES:
         if num == variables.road_type:
-            mods.modify_choices["road_type"] = name
+            mods.modify_choices["road_type"] = name.lower()
     #DRIVER
         #EXPERIENCE 1
     for num, name in cv.DRIVER_EXP_CHOICES:
         if num == variables.driver_exp1:
-            mods.modify_choices["driver_exp1"] = name
+            mods.modify_choices["driver_experience1"] = name.lower()
         #EXPERIENCE 2
     for num, name in cv.DRIVER_EXP_CHOICES:
         if num == variables.driver_exp2:
-            mods.modify_choices["driver_exp1"] = name
+            mods.modify_choices["driver_experience2"] = name.lower()
         #CHEMICAL INFLUENCE 1
     for num, name in cv.DRIVER_DUI_CHOICES:
         if num == variables.driver_dui1:
-            mods.modify_choices["driver_dui1"] = name
+            mods.modify_choices["chemical_influence1"] = name.lower()
         #CHEMICAL INFLUENCE 2
     for num, name in cv.DRIVER_DUI_CHOICES:
         if num == variables.driver_dui2:
-            mods.modify_choices["driver_dui2"] = name
+            mods.modify_choices["chemical_influence2"] = name.lower()
         #VISION 1
     for num, name in cv.DRIVER_VISION_CHOICES:
         if num == variables.driver_vision1:
-            mods.modify_choices["driver_vision1"] = name
+            mods.modify_choices["vision1"] = name.lower()
         #VISION 2
     for num, name in cv.DRIVER_VISION_CHOICES:
         if num == variables.driver_vision2:
-            mods.modify_choices["driver_vision2"] = name
+            mods.modify_choices["vision2"] = name.lower()
         #AGE 1
     for num, name in cv.DRIVER_AGE_CHOICES:
         if num == variables.driver_age1:
-            mods.modify_choices["driver_age1"] = name
+            mods.modify_choices["age1"] = name.lower()
         #AGE 2
     for num, name in cv.DRIVER_AGE_CHOICES:
         if num == variables.driver_age1:
-            mods.modify_choices["driver_age1"] = name
+            mods.modify_choices["age2"] = name.lower()
     #VEHICLE 1
     for num, name in cv.VEHICLE_CHOICES:
         if num == variables.vehicle1:
-            mods.modify_choices["vehicle1"] = name
+            mods.modify_choices["vehicle1"] = name.lower()
     #VEHICLE 2
     for num, name in cv.VEHICLE_CHOICES:
         if num == variables.vehicle1:
-            mods.modify_choices["vehicle1"] = name
+            mods.modify_choices["vehicle2"] = name.lower()
     #COMPUTER
     for num, name in cv.COMPUTER_CHOICES:
         if num == variables.computer:
             mods.modify_choices["computer"] = name
+    return mods
